@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strconv"
 	"testing"
 	"time"
 )
@@ -216,4 +217,23 @@ func TestPrepareStatement(t *testing.T) {
 	}
 
 	defer statement.Close()
+
+	for i := 0; i < 10; i++ {
+		email := "ke" + strconv.Itoa(i) + "@gmail.com"
+		comment := "Komentar ke " + strconv.Itoa(i)
+
+		result, err := statement.ExecContext(ctx, email, comment)
+
+		if err != nil {
+			panic(err)
+		}
+
+		id, err := result.LastInsertId()
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("Commetnt ke", id)
+	}
+
 }
